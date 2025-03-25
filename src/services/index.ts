@@ -1,5 +1,5 @@
 /// <reference lib="webworker" />
-import { CACHE_EXPIRATION_MS, CACHE_NAME } from "./service-worker";
+import { CACHE_EXPIRATION_MS, CACHE_NAME } from "../service-worker";
 
 /*
  * Makes the API call

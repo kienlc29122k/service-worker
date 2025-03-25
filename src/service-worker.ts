@@ -1,4 +1,4 @@
-import { fetchWithCache, getCachedResponse } from ".";
+import { fetchWithCache, getCachedResponse } from "./services";
 
 export const CACHE_NAME = "recipes-cache";
 export const API_URL_PREFIX = "https://dummyjson.com/recipes";
