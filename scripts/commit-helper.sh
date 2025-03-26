@@ -15,15 +15,71 @@ validate_input() {
   return 0
 }
 
-# Prefix selection
+# Prefix selection with arrow key navigation
 select_prefix() {
-  echo -e "${BLUE}What is the prefix of the task?${NC}"
-  select prefix in "feature" "fix" "update" "chore" "refactor"; do
-    if [[ -n $prefix ]]; then
+  echo -e "${BLUE}What is the prefix of the task? (Use ↑/↓ arrows and press Enter)${NC}"
+  
+  # Define options
+  options=("feature" "fix" "update" "chore" "refactor")
+  
+  # Initialize selection index
+  selected=0
+  
+  # Draw the menu
+  draw_menu() {
+    # Move cursor up by number of options + 1 (for the prompt)
+    for ((i=0; i<=${#options[@]}; i++)); do
+      tput cuu1 2>/dev/null
+    done
+    
+    # Clear lines and redraw
+    echo -e "${BLUE}What is the prefix of the task? (Use ↑/↓ arrows and press Enter)${NC}"
+    for i in "${!options[@]}"; do
+      if [[ $i -eq $selected ]]; then
+        echo -e " > ${GREEN}${options[$i]}${NC}"
+      else
+        echo -e "   ${options[$i]}"
+      fi
+    done
+  }
+  
+  # Draw initial menu
+  for i in "${!options[@]}"; do
+    if [[ $i -eq $selected ]]; then
+      echo -e " > ${GREEN}${options[$i]}${NC}"
+    else
+      echo -e "   ${options[$i]}"
+    fi
+  done
+  
+  # Handle key presses
+  while true; do
+    read -rsn1 key
+    
+    if [[ $key == $'\x1b' ]]; then
+      read -rsn2 key
+      
+      case "$key" in
+        '[A') # Up arrow
+          ((selected--))
+          if [[ $selected -lt 0 ]]; then
+            selected=$((${#options[@]}-1))
+          fi
+          draw_menu
+          ;;
+        '[B') # Down arrow
+          ((selected++))
+          if [[ $selected -ge ${#options[@]} ]]; then
+            selected=0
+          fi
+          draw_menu
+          ;;
+      esac
+    elif [[ $key == "" ]]; then # Enter key
+      prefix=${options[$selected]}
+      echo
       echo -e "${GREEN}Selected prefix: $prefix${NC}"
       return 0
-    else
-      echo -e "${YELLOW}Invalid selection. Please select a number from the list.${NC}"
     fi
   done
 }
