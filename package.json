@@ -9,7 +9,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "commit": "chmod +x commit-helper.sh && ./commit-helper.sh"
+    "commit": "bash scripts/commit-helper.sh",
+    "sync": "bash scripts/sync-branch.sh"
   },
   "dependencies": {
     "react": "^19.0.0",
