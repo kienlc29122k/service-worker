@@ -4,7 +4,16 @@
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
+RED='\033[0;31m'
 NC='\033[0m' # No Color
+
+# Check if there are staged changes
+check_staged_changes() {
+  if [[ -z "$(git diff --cached --name-only 2>/dev/null)" ]]; then
+    echo -e "${RED}Nothing to commit. Please stage your changes first using 'git add'${NC}"
+    exit 1
+  fi
+}
 
 # Function to validate input is not empty
 validate_input() {
@@ -124,6 +133,9 @@ get_commit_message() {
 echo -e "${GREEN}=== Git Commit Helper ===${NC}"
 echo "This script will help you format your git commit message."
 echo
+
+# Check for staged changes before proceeding
+check_staged_changes
 
 # Get all required information
 select_prefix
