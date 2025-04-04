@@ -15,13 +15,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup WSL
-        shell: pwsh
-        run: |
-          Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
-          wsl --install -d Ubuntu
-          wsl --update
-          wsl --list
+      # - name: Setup WSL
+      #   shell: pwsh
+      #   run: |
+      #     Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
+      #     wsl --install -d Ubuntu
+      #     wsl --update
+      #     wsl --list
 
       - name: Setup SonarScanner
         uses: sonarsource/sonarcloud-github-action@master
