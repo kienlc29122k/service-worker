@@ -15,6 +15,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Setup WSL
+        run: |
+          wsl --install -d Ubuntu
+          wsl --update
+          wsl --list
+
       - name: Setup SonarScanner
         uses: sonarsource/sonarcloud-github-action@master
         env:
