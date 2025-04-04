@@ -1,20 +1,10 @@
-// import { useEffect } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import {
-  // registerServiceWorker,
-  unregisterServiceWorker,
-} from "./serviceWorkerRegistration";
+import { serviceWorkerRegistration } from "./serviceWorkerRegistration";
 import Dropdown from "./components/Dropdown";
 
 function App() {
-  // const [count, setCount] = useState(0);
-
-  // useEffect(() => {
-  //   registerServiceWorker();
-  // }, []);
-
   return (
     <>
       <div>
@@ -27,7 +17,7 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={unregisterServiceWorker} type="button">
+        <button onClick={serviceWorkerRegistration.unregister} type="button">
           Unregister Service Worker
         </button>
         <p>
@@ -43,3 +33,5 @@ function App() {
 }
 
 export default App;
+
+serviceWorkerRegistration.register();

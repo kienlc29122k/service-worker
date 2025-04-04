@@ -1,0 +1,38 @@
+name: SonarQube Analysis
+
+on:
+  push:
+    branches:
+      - main # or your main branch
+  pull_request:
+    branches:
+      - main # or your main branch
+
+jobs:
+  sonar:
+    runs-on: self-hosted # Use your self-hosted runner
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # - name: Setup WSL
+      #   shell: pwsh
+      #   run: |
+      #     Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
+      #     wsl --install -d Ubuntu
+      #     wsl --update
+      #     wsl --list
+      - name: Install unzip
+        run: sudo apt-get install -y unzip
+
+      - name: Setup SonarScanner
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.projectKey=service-worker
+            -Dsonar.sources=.
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}

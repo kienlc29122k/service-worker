@@ -4,11 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "prepare-sw": "node src/services/copy-service-worker.js && node src/services/copy-service-worker-utils.js",
-    "dev": "npm run prepare-sw && vite",
+    "prepare-sw": "node src/services/service-worker.ts",
+    "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "commit": "sh scripts/commit-helper.sh",
+    "sync": "sh scripts/sync-branch.sh"
   },
   "dependencies": {
     "react": "^19.0.0",
