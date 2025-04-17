@@ -129,6 +129,29 @@ get_commit_message() {
   echo -e "${GREEN}Commit message: $commit_message${NC}"
 }
 
+# Get sync branch name
+get_sync_branch() {
+  # Get the current branch's parent
+  parent_branch=$(git show-branch | grep '*' | grep -v "$(git rev-parse --abbrev-ref HEAD)" | head -n1 | sed 's/.*\[\(.*\)\].*/\1/' || echo "main")
+  
+  echo -e "${BLUE}Do you want to sync with a remote branch? (y/n)${NC}"
+  read sync_confirm
+  
+  if [[ $sync_confirm == "y" || $sync_confirm == "Y" ]]; then
+    echo -e "${BLUE}Enter the branch name to sync with (press Enter to use parent branch '$parent_branch'):${NC}"
+    read sync_branch
+    
+    # Use parent branch if no input provided
+    if [[ -z "$sync_branch" ]]; then
+      sync_branch=$parent_branch
+    fi
+    
+    echo -e "${GREEN}Will sync with branch: $sync_branch${NC}"
+    return 0
+  fi
+  return 1
+}
+
 # Main script execution
 echo -e "${GREEN}=== Git Commit Helper ===${NC}"
 echo "This script will help you format your git commit message."
@@ -156,8 +179,21 @@ read confirm
 
 if [[ $confirm == "y" || $confirm == "Y" ]]; then
   # Execute git commit command
-  git commit -m "$formatted_message"
-  echo -e "${GREEN}Commit successful!${NC}"
+  if git commit -m "$formatted_message"; then
+    echo -e "${GREEN}Commit successful!${NC}"
+    
+    # Ask for sync after successful commit
+    if get_sync_branch; then
+      echo -e "${BLUE}Syncing with $sync_branch...${NC}"
+      if git pull origin "$sync_branch"; then
+        echo -e "${GREEN}Successfully synced with $sync_branch${NC}"
+      else
+        echo -e "${RED}Failed to sync with $sync_branch. Please resolve conflicts manually.${NC}"
+      fi
+    fi
+  else
+    echo -e "${RED}Commit failed!${NC}"
+  fi
 else
   echo -e "${YELLOW}Commit canceled.${NC}"
 fi
