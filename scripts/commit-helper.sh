@@ -198,12 +198,6 @@ if [[ $confirm == "y" || $confirm == "Y" ]]; then
   if git commit -m "$formatted_message"; then
     echo -e "${GREEN}Commit successful!${NC}"
     get_sync_branch
-    # Ask for sync after successful commit
-    # if get_sync_branch; then
-    #   # The sync_branch function already handles this logic
-    #   sync_with_branch "$sync_branch"
-    #   fi
-    # fi
   else
     echo -e "${RED}Commit failed!${NC}"
   fi
