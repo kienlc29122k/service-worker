@@ -20,9 +20,6 @@ const Dropdown = () => {
     }
   };
 
-  /*
-   * Fallback in case service worker is not ready
-   */
   const fetchRecipesFromNetwork = async () => {
     try {
       const response = await fetch("https://dummyjson.com/recipes?select=name");
