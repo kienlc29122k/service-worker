@@ -200,11 +200,8 @@ if [[ $confirm == "y" || $confirm == "Y" ]]; then
     
     # Ask for sync after successful commit
     if get_sync_branch; then
-      echo -e "${BLUE}Syncing with $sync_branch...${NC}"
-      if git pull origin "$sync_branch"; then
-        echo -e "${GREEN}Successfully synced with $sync_branch${NC}"
-      else
-        echo -e "${RED}Failed to sync with $sync_branch. Please resolve conflicts manually.${NC}"
+      # The sync_branch function already handles this logic
+      sync_with_branch "$sync_branch"
       fi
     fi
   else
