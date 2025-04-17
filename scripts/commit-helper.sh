@@ -131,22 +131,38 @@ get_commit_message() {
 
 # Get sync branch name
 get_sync_branch() {
-  # Get the current branch's parent
-  parent_branch=$(git show-branch | grep '*' | grep -v "$(git rev-parse --abbrev-ref HEAD)" | head -n1 | sed 's/.*\[\(.*\)\].*/\1/' || echo "main")
+  # Set default branch to main
+  default_branch="main"
   
   echo -e "${BLUE}Do you want to sync with a remote branch? (y/n)${NC}"
   read sync_confirm
   
   if [[ $sync_confirm == "y" || $sync_confirm == "Y" ]]; then
-    echo -e "${BLUE}Enter the branch name to sync with (press Enter to use parent branch '$parent_branch'):${NC}"
+    echo -e "${BLUE}Enter the branch name to sync with (press Enter to use default branch '${default_branch}'):${NC}"
     read sync_branch
     
-    # Use parent branch if no input provided
+    # Use default branch if no input provided
     if [[ -z "$sync_branch" ]]; then
-      sync_branch=$parent_branch
+      sync_branch=$default_branch
     fi
     
     echo -e "${GREEN}Will sync with branch: $sync_branch${NC}"
+    
+    # Fetch latest changes from the remote branch
+    echo -e "${BLUE}Fetching latest changes from $sync_branch...${NC}"
+    if ! git fetch origin $sync_branch; then
+      echo -e "${RED}Failed to fetch from remote. Please check your internet connection and try again.${NC}"
+      return 1
+    fi
+    
+    # Merge changes from the remote branch
+    echo -e "${BLUE}Merging changes from $sync_branch...${NC}"
+    if ! git merge origin/$sync_branch; then
+      echo -e "${RED}Merge failed. Please resolve conflicts and try again.${NC}"
+      return 1
+    fi
+    
+    echo -e "${GREEN}Successfully synced with $sync_branch!${NC}"
     return 0
   fi
   return 1
